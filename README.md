@@ -39,5 +39,75 @@ go build
 ## 7、配置nginx
 因为项目是前端后端分离的，所以需要单独部署
 ```shell
+server {
+  listen 80;
+  server_name aaa.com;
 
+  location / {
+    root /data/yearning;
+     index index.html;
+    try_files $uri $uri/ /index.html;
+  }
+location ~ ^/(login|register|fetch|lang|api|ldap|downlaod|oidc/state)(/.*)?$ {
+      proxy_pass http://192.168.0.13:8000$2;
+    }
+ location ^~/api/v2/common {
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-NginX-Proxy false;
+      proxy_pass http://192.168.0.13:8000;
+      proxy_redirect off;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+  }
+location ^~/api/v2/audit {
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-NginX-Proxy false;
+      proxy_pass http://192.168.0.13:8000;
+      proxy_redirect off;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+  }
+location ^~/api/v2/fetch/order_state {
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-NginX-Proxy false;
+      proxy_pass http://192.168.0.13:8000;
+      proxy_redirect off;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+  }
+ location ^~/api/v2/fetch/comment {
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-NginX-Proxy false;
+      proxy_pass http://192.168.0.13:8000;
+      proxy_redirect off;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+  }
+ location ^~/api/v2/query/results {
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-NginX-Proxy false;
+      proxy_pass http://192.168.0.13:8000;
+      proxy_redirect off;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+  }
+location ^~/api {
+      proxy_pass http://192.168.0.13:8000;
+    }
+}
 ```
